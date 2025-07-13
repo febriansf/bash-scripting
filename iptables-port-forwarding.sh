@@ -22,7 +22,7 @@ case $answ in
 		read input_iface
 
 		if [[ $input_iface -ge 1 && $input_iface -le ${#interfaces[@]} ]]; then
-			selected_interface="${interfaces[$((choice-1))]}"
+			selected_interface="${interfaces[$((input_iface-1))]}"
 		else
 			echo "Invalid Interface."
 		fi
