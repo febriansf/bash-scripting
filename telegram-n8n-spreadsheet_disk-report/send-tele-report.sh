@@ -4,6 +4,8 @@ set -a
 source .env
 set +a
 
+# Temporary fix HDSentinel running issue whie in crontab :D
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 BOT_TOKEN=$BOT_TOKEN
 CHAT_ID=$CHAT_ID
