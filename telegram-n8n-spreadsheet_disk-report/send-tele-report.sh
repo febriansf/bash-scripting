@@ -11,7 +11,7 @@ BOT_TOKEN=$BOT_TOKEN
 CHAT_ID=$CHAT_ID
 XML_FILE="/tmp/report.xml"  
 HDSENTINEL_PATH=$SENTINEL_PATH
-SERVER_NAME="Server-Hostname"
+SERVER_NAME=$SERVER_NAME
 
 check_dependencies() {
     local dependencies=("xmlstarlet" "curl")
