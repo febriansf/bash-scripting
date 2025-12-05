@@ -9,9 +9,47 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-echo "==> Install Fail2Ban..."
-yum -y install fail2ban
+echo "==> Checking OS type..."
 
+# Detect OS
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS_ID=$ID
+else
+    echo "Tidak dapat mendeteksi OS."
+    exit 1
+fi
+
+echo "Detected OS: $OS_ID"
+echo "==> Install Fail2Ban..."
+
+case "$OS_ID" in
+    centos|rhel|cloudlinux)
+        yum -y install epel-release
+        yum -y install fail2ban
+        systemctl enable --now fail2ban
+        ;;
+
+    almalinux|rocky)
+        dnf -y install epel-release
+        dnf -y install fail2ban
+        systemctl enable --now fail2ban
+        ;;
+
+    debian|ubuntu)
+        apt update -y
+        apt install -y fail2ban
+        systemctl enable --now fail2ban
+        ;;
+
+    *)
+        echo "OS tidak dikenal. Instalasi Fail2Ban tidak dapat dilanjutkan."
+        exit 1
+        ;;
+esac
+
+echo "==> Fail2Ban installation completed."
+echo " "
 echo "==> Buat file jail.local..."
 cat > /etc/fail2ban/jail.local << 'EOF'
 [sshd]
