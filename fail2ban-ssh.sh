@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Fail2Ban installer & configurator for OpenVZ (YUM-based)
+# Fail2Ban installer & configurator for Linux
 #
 
 # Pastikan dijalankan sebagai root
