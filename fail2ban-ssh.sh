@@ -24,7 +24,7 @@ echo "Detected OS: $OS_ID"
 echo "==> Install Fail2Ban..."
 
 case "$OS_ID" in
-    centos|rhel|cloudlinux)
+    centos|rhel|cloudlinux|virtuozzo)
         yum -y install epel-release
         yum -y install fail2ban
         systemctl enable --now fail2ban
