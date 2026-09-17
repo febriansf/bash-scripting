@@ -13,7 +13,14 @@ fi
 
 cd "$HDS_DIR" || exit 1
 
-./HDSentinel | awk '
+if [ "$EUID" -ne 0 ]; then
+    echo "WARNING: not running as root — HDSentinel may not detect any drives." >&2
+fi
+
+# Save raw output for inspection
+./HDSentinel > /tmp/hds_raw.txt
+
+cat /tmp/hds_raw.txt | awk '
 BEGIN {
   fmt="%-10s %-26s %-16s %-10s %-18s %-20s %10s %8s %8s\n"
   printf fmt,"Device","Model","S/N","Size","PoT","EstLife","TBW","Health","Perf"
@@ -49,3 +56,5 @@ END {
   if (dev && sn && health !~ /Unknown/ && perf !~ /Unknown/)
     printf fmt,dev,model,sn,size,pot,life,tbw,health,perf
 }'
+
+echo "Raw HDSentinel output saved to /tmp/hds_raw.txt for inspection"
