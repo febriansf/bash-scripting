@@ -149,7 +149,7 @@ while true; do
             fi
 
             FIREWALL_BACKEND="firewallcmd"
-            FAIL2BAN_ACTION='firewallcmd-multiport[name=sshd, port="ssh", protocol=tcp]'
+            FAIL2BAN_ACTION='firewallcmd-multiport[name=sshd, port="ssh", protocol=tcp, ipsettime='<timeout-bantime>']'
             break
             ;;
 
