@@ -22,7 +22,7 @@ fi
 
 cat /tmp/hds_raw.txt | awk '
 BEGIN {
-  fmt="%-10s %-26s %-16s %-10s %-18s %-20s %10s %8s %8s\n"
+  fmt="%-10s %-30s %-20s %-10s %-18s %-20s %10s %8s %8s\n"
   printf fmt,"Device","Model","S/N","Size","PoT","EstLife","TBW","Health","Perf"
   printf fmt,"------","-----","---","----","---","-------","---","------","----"
 }
