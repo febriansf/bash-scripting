@@ -13,6 +13,10 @@
 # Override lewat environment variable:
 #   MAXRETRY=3 FINDTIME=10m BANTIME=5m BAN_INCREMENT=true bash fail2ban-ssh.sh
 #
+# Via pipe (menu tetap interaktif lewat /dev/tty, argumen lewat "bash -s --"):
+#   wget -qO- <url> | bash
+#   wget -qO- <url> | bash -s -- -b 4
+#
 set -Eeuo pipefail
 export PATH="$PATH:/usr/sbin:/sbin"
 trap 'echo "ERROR: script berhenti di baris $LINENO" >&2' ERR
@@ -39,7 +43,7 @@ CHOICE=""
 while getopts ":b:h" opt; do
     case "$opt" in
         b) CHOICE="$OPTARG" ;;
-        h) sed -n '2,14p' "$0"; exit 0 ;;
+        h) sed -n '2,18p' "$0"; exit 0 ;;
         *) die "Opsi tidak valid. Gunakan -h untuk bantuan." ;;
     esac
 done
@@ -168,6 +172,10 @@ select_backend() {
 BANACTION=""
 if [[ -n "$CHOICE" ]]; then
     select_backend "$CHOICE" || die "Backend yang diminta (-b $CHOICE) tidak bisa dipakai."
+elif ! { true </dev/tty; } 2>/dev/null; then
+    # Tidak ada terminal sama sekali (cron, CI, dsb)
+    warn "Tidak ada terminal interaktif, pakai default: $DEFAULT_CHOICE (gunakan -b untuk memilih)."
+    select_backend "$DEFAULT_CHOICE" || die "Backend default tidak bisa dipakai."
 else
     echo "============================================================"
     echo " Firewall Backend"
@@ -182,7 +190,7 @@ else
     echo
 
     while true; do
-        read -rp "Masukkan pilihan [1-4] (default: $DEFAULT_CHOICE): " CHOICE \
+        read -rp "Masukkan pilihan [1-4] (default: $DEFAULT_CHOICE): " CHOICE </dev/tty \
             || die "Input tidak tersedia. Gunakan opsi -b."
         CHOICE="${CHOICE:-$DEFAULT_CHOICE}"
         select_backend "$CHOICE" && break
