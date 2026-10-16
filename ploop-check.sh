@@ -28,7 +28,31 @@ SORT_BY=""
 REVERSE=0
 DETAIL=0
 
-usage() { awk 'NR==1{next} /^#/{sub(/^# ?/,""); print; next} {exit}' "$0"; exit "${1:-0}"; }
+usage() {
+  cat <<'EOF'
+ploop-check.sh - check every OpenVZ 7 container's ploop image size
+
+Flags a container when:
+  OVER_DISK  - image on the host is larger than the container's virtual disk
+  WASTE(n%)  - (image - used inside CT) is >= WASTE_PCT % of the virtual disk
+  SNAP(n)    - the image has n snapshot deltas
+  FULL(n%)   - used space inside the CT is >= USE_PCT % of the virtual disk
+
+Usage: ./ploop-check.sh [-p] [-w PCT] [-u PCT] [-s FIELD] [-r] [-d|-dd]
+  -p        show only containers with problems
+  -w PCT    waste threshold in percent (default 30)
+  -u PCT    show only containers whose USED is >= PCT % of DISK
+            (also sets the FULL threshold, default 90)
+            -u 100 = containers whose used space has reached/exceeded the disk
+  -s FIELD  sort by: disk, used, image, waste, use (largest first)
+  -r        reverse the sort order (smallest first)
+  -d        detailed sizes (2 decimals) + FREE, BASE and DELTAS columns
+  -dd       exact sizes in bytes + FREE, BASE and DELTAS columns
+  -h        show this help
+Exit code: 0 = no problems, 1 = at least one container flagged, 2 = bad usage
+EOF
+  exit "${1:-0}"
+}
 die()   { echo "Error: $*" >&2; exit 2; }
 
 while getopts "pw:u:s:rdh" opt; do
