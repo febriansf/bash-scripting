@@ -38,8 +38,10 @@ Check the smartctl version with `smartctl --version`.
 **1. Clone the repo**
 
 ```bash
-git clone https://github.com/<you>/<repo>.git /opt/disk-report
-cd /opt/disk-report
+git clone --filter=blob:none --no-checkout https://github.com/febriansf/bash-scripting.git /opt/scripts
+cd /opt/scripts
+git sparse-checkout set bot-smartctl
+git checkout main        # or master, whatever your branch is called
 ```
 
 **2. Create your config**
