@@ -1,0 +1,4 @@
+# smartctl-report configuration
+SERVER_NAME="[HOSTNAME]"
+BOT_TOKEN="[BOT-TOKEN]"
+CHAT_ID="[CHAT-ID]"
