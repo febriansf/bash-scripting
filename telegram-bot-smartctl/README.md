@@ -7,7 +7,7 @@ Supports SATA SSD/HDD, SAS HDD/SSD and NVMe, attached directly or behind a MegaR
 The caption looks like this:
 
 ```
-🟡 VPS-ID-2 — 1 WARNING, 3 OK
+🟡 Server-2 — 1 WARNING, 3 OK
 🟡 S4XXNF0M123456 (SSD): temp 64C (limit 60)
 ```
 

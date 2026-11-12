@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# disk-report.sh - collect disk health with smartctl and post it to a Telegram
+# bot_smartctl.sh - collect disk health with smartctl and post it to a Telegram
 # channel: a JSON file (one flat row per disk, for n8n -> Google Sheets) with a
 # short human-readable summary as the caption.
 #
@@ -8,9 +8,9 @@
 # Requires: smartctl >= 7.0 (JSON output), jq >= 1.6, curl, flock
 #
 # Usage:
-#   disk-report.sh                  collect, send to Telegram, then update state
-#   disk-report.sh --dry-run        print caption + JSON only (nothing sent, state untouched)
-#   disk-report.sh --forget SERIAL  stop tracking a disk that was removed on purpose
+#   bot_smartctl.sh                  collect, send to Telegram, then update state
+#   bot_smartctl.sh --dry-run        print caption + JSON only (nothing sent, state untouched)
+#   bot_smartctl.sh --forget SERIAL  stop tracking a disk that was removed on purpose
 #
 # Row columns (15):
 #   timestamp, server, device, model, serial, type, capacity_gb, health_pct,
