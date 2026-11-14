@@ -57,6 +57,8 @@ fi
 
 # ======================================================================
 
+declare -gA SEEN=()
+
 # Per-disk parser. Input: `smartctl -x -j` output. Output: {row, state}.
 read -r -d '' JQ_DISK <<'JQ' || true
 def attr($id): (.ata_smart_attributes.table // []) | map(select(.id == $id)) | .[0];
@@ -206,6 +208,7 @@ JQ
 # Combines per-disk results, adds rows for disks that disappeared, builds new state.
 read -r -d '' JQ_FINAL <<'JQ' || true
 . as $r
+| ($r | map(.row.serial)) as $seen
 | ($old | to_entries | map(select(.key | IN($seen[]) | not))) as $missing
 | {
     payload: (
@@ -331,7 +334,8 @@ read_smart() {
 collect() {
     local entry name dtype json rc src stray serial out
     local -a args
-    declare -gA SEEN=()
+    # declare -gA SEEN=()
+    SEEN=()
     RESULTS=""
 
     for entry in "${DEVICES[@]}"; do
@@ -414,9 +418,14 @@ main() {
     discover
     collect
 
-    seen_json=$(printf '%s\n' "${!SEEN[@]}" | jq -Rsc 'split("\n") | map(select(length > 0))')
+    # seen_json=$(printf '%s\n' "${!SEEN[@]}" | jq -Rsc 'split("\n") | map(select(length > 0))')
+    # combined=$(printf '%s' "$RESULTS" | jq -sc \
+    #     --argjson old "$STATE" --argjson seen "$seen_json" \
+    #     --arg ts "$TS" --arg server "$SERVER_NAME" "$JQ_FINAL") \
+    #     || die "failed to build payload"
+    
     combined=$(printf '%s' "$RESULTS" | jq -sc \
-        --argjson old "$STATE" --argjson seen "$seen_json" \
+        --argjson old "$STATE" \
         --arg ts "$TS" --arg server "$SERVER_NAME" "$JQ_FINAL") \
         || die "failed to build payload"
 
